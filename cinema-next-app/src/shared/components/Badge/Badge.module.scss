@@ -1,0 +1,39 @@
+@use 'styles/variables' as *;
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: $spacing-xs $spacing-sm;
+  backdrop-filter: blur(4px);
+  border-radius: $radius-lg;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: $spacing-xs;
+}
+
+.badge--rating {
+  left: 0;
+  background: rgba(0, 0, 0, 0.45);
+  width: fit-content;
+  height: 24px;
+}
+
+.badge__icon {
+  width: 20px;
+  height: 20px;
+}
+
+.badge--duration {
+  background: rgba(0, 0, 0, 0.45);
+  width: fit-content;
+  height: 24px;
+}
+
+.badge__value .badge__unit { 
+  font-size: 18px;
+}

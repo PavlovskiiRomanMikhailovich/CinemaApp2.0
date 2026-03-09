@@ -1,0 +1,70 @@
+@use 'styles/variables' as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-background);
+  cursor: pointer;
+  transition: box-shadow $transition-fast, transform $transition-fast;
+  max-width: $card-max-width;
+  height: 100%;
+  border-radius: $radius-md;
+
+  &:hover {
+    box-shadow: $shadow-md;
+    transform: translateY(-2px);
+  }
+}
+
+.card__imageWrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background-color: var(--card-image-bg);
+  position: relative;
+}
+
+.card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card__body {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  margin: $spacing-2xl $spacing-md $spacing-xl;
+}
+
+.card__footer {
+  @include flex-between;
+  gap: $spacing-sm;
+  margin: 0 $spacing-md $spacing-2xl;
+  min-height: 52px;
+}
+
+.card__content {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 122%;
+}
+
+.card__subtitle {
+  line-height: 125%;
+}
+
+.card__title {
+  line-height: 120%;
+}
+
+.card__caption {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.card__action {
+  width: 100%;
+}

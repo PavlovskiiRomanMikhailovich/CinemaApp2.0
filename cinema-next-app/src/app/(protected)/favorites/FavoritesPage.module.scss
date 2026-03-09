@@ -1,0 +1,48 @@
+@use 'styles/variables' as *;
+
+.container {
+  padding: $spacing-2xl;
+  max-width: $max-width-content;
+  margin: 0 auto;
+}
+
+.title {
+  margin-bottom: $spacing-2xl;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: $spacing-2xl;
+}
+
+.card-actions {
+  display: flex;
+  gap: $spacing-sm;
+  margin-top: $spacing-md;
+  
+  button {
+    flex: 1;
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: $spacing-4xl;
+  color: var(--text-secondary);
+  font-size: 18px;
+}
+
+.empty {
+  text-align: center;
+  padding: $spacing-4xl;
+  
+  h1 {
+    margin-bottom: $spacing-lg;
+  }
+  
+  p {
+    margin-bottom: $spacing-2xl;
+    color: var(--text-secondary);
+  }
+}

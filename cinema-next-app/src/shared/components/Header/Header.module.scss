@@ -1,0 +1,102 @@
+@use 'styles/variables' as *;
+
+.header {
+  @include flex-between;
+  padding: 0 $spacing-3xl;
+  background-color: var(--base-background);
+  border-bottom: 1px solid var(--header-border);
+
+  @include mobile {
+    padding: 12px;
+    justify-content: center;
+  }
+}
+
+.header__logo {
+  @include mobile {
+    display: none;
+  }
+
+  img {
+    height: 94px;
+    width: auto;
+
+    @include tablet {
+      height: 70px;
+    }
+  }
+}
+
+.header__nav {
+  display: flex;
+  gap: $spacing-3xl;
+  position: relative;
+
+  @include tablet {
+    gap: $spacing-2xl;
+  }
+
+  @include mobile {
+    gap: $spacing-xl;
+  }
+}
+
+.header__link {
+  text-decoration: none;
+  color: var(--text-primary);
+  font-weight: 400;
+  padding: $spacing-sm 0;
+  position: relative;
+  transition: color $transition-fast;
+
+  @include mobile {
+    font-size: 14px;
+  }
+
+  &:hover {
+    color: var(--brand);
+  }
+
+  &.active {
+    color: var(--brand);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 100%;
+    height: 2px;
+    background-color: var(--brand);
+    transition: transform $transition-fast;
+    transform-origin: center;
+  }
+
+  &.active::after {
+    transform: translateX(-50%) scaleX(1);
+  }
+}
+
+.icons-container {
+  display: flex;
+  gap: $spacing-lg;
+
+  @include tablet {
+    gap: $spacing-md;
+  }
+
+  @include mobile {
+    display: none;
+  }
+
+  .icon-wrapper {
+    cursor: pointer;
+    transition: opacity $transition-normal;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}

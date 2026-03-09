@@ -1,0 +1,70 @@
+@use 'styles/variables' as *;
+
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  border: none;
+  padding: 14px $spacing-xl;
+  font-size: 18px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all $transition-fast;
+  border-radius: $radius-md;
+}
+
+.button__content {
+  display: flex;
+  gap: $spacing-lg;
+  align-items: center;
+  white-space: nowrap;
+
+  img {
+    width: 20px;
+  }
+}
+
+.button--filled {
+  background-color: var(--brand);
+  color: var(--button-primary-text);
+
+  &:hover:not(:disabled):not(.button--disabled) {
+    background-color: var(--brand-active);
+  }
+
+  &:active:not(:disabled):not(.button--disabled) {
+    background-color: var(--brand-active);
+  }
+}
+
+.button--outline {
+  background-color: transparent;
+  color: var(--brand);
+  border: 2px solid var(--brand);
+
+  &:hover:not(:disabled):not(.button--disabled) {
+    background-color: rgba(255, 77, 77, 0.1);
+  }
+
+  &:active:not(:disabled):not(.button--disabled) {
+    background-color: rgba(255, 77, 77, 0.2);
+  }
+}
+
+.button--disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.button--filled.button--disabled {
+  background-color: var(--button-primary-bg-disabled);
+}
+
+.button--outline.button--disabled {
+  background-color: transparent;
+  border-color: var(--button-primary-bg-disabled);
+  color: var(--button-primary-bg-disabled);
+}

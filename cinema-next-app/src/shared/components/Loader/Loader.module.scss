@@ -1,0 +1,20 @@
+@use 'styles/variables' as *;
+
+.loader {
+  animation: spin 1s linear infinite;
+
+  * {
+    fill: currentColor !important;
+  }
+
+  path,
+  circle,
+  rect {
+    fill: currentColor;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

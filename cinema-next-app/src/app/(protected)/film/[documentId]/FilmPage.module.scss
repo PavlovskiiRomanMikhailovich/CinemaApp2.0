@@ -1,0 +1,409 @@
+@use 'styles/variables' as *;
+
+.film-page {
+  margin: 0 auto;
+  padding: $spacing-3xl;
+  max-width: 1440px;
+  width: 100%;
+}
+
+.back-button {
+  margin-bottom: $spacing-3xl;
+  border: none;
+  color: var(--text-primary);
+}
+
+.back-button:hover {
+  opacity: 0.7;
+  background: none !important;
+}
+
+.film-page__content {
+  display: grid;
+  grid-template-columns: $trailer-width 1fr;
+  gap: $spacing-3xl;
+  align-items: start;
+}
+
+.film-page__trailer {
+  width: 100%;
+  max-width: $trailer-width;
+  height: auto;
+  aspect-ratio: 16/9;
+  border-radius: $radius-xl;
+  overflow: hidden;
+  box-shadow: $shadow-lg;
+}
+
+.film-page__video {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.film-page__info {
+  @include flex-col;
+  gap: $spacing-2xl;
+  min-width: 0;
+}
+
+.film-page__meta {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.film-page__rating {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3xl;
+  padding: $spacing-lg 0;
+  flex-wrap: wrap;
+}
+
+.film-page__description {
+  line-height: 1.6;
+  color: var(--text-secondary);
+  word-wrap: break-word;
+}
+
+.film-page__actions {
+  display: flex;
+  gap: $spacing-lg;
+  margin-top: $spacing-lg;
+  flex-wrap: wrap;
+}
+
+.film-page__title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.title-badge {
+  position: relative;
+}
+
+.recommendations-carousel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: $spacing-4xl;
+}
+
+.recommendations-track {
+  display: flex;
+  gap: $spacing-2xl;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: $spacing-sm 0 $spacing-xl;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.carousel-arrow {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-full;
+  background: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  @include flex-center;
+  z-index: 10;
+  transition: all $transition-normal;
+  padding: 0;
+  backdrop-filter: blur(2px);
+  border: none;
+
+  @include tablet {
+    display: none;
+  }
+}
+
+.carousel-arrow--left {
+  left: -22px;
+}
+
+.carousel-arrow--right {
+  right: -22px;
+}
+
+.carousel-arrow img {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.carousel-arrow:hover {
+  box-shadow: var(--shadow-white);
+  transform: scale(1.05);
+}
+
+.film-page__recommendations {
+  margin-top: $spacing-4xl;
+}
+
+.recommendations-title {
+  margin-bottom: $spacing-3xl;
+}
+
+.recommendations-item {
+  flex: 0 0 $card-max-width;
+  transition: transform $transition-fast;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.recommendations-item .card {
+  max-width: $card-max-width;
+  width: 100%;
+  max-height: 550px;
+}
+
+/* Десктоп (1200px - 1400px) */
+@include large {
+  .film-page {
+    padding: $spacing-2xl;
+  }
+
+  .film-page__content {
+    grid-template-columns: minmax(500px, 700px) 1fr;
+    gap: $spacing-2xl;
+  }
+
+  .recommendations-item {
+    flex: 0 0 320px;
+  }
+}
+
+@include desktop {
+  .film-page {
+    padding: $spacing-xl;
+  }
+
+  .film-page__content {
+    grid-template-columns: minmax(450px, 600px) 1fr;
+    gap: $spacing-xl;
+  }
+
+  .film-page__title-wrapper .badge {
+    height: 36px;
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .recommendations-item {
+    flex: 0 0 300px;
+  }
+}
+
+/* Планшеты (768px - 1200px) */
+@include tablet {
+  .film-page {
+    padding: $spacing-lg;
+  }
+
+  .film-page__content {
+    grid-template-columns: 1fr;
+    gap: $spacing-xl;
+  }
+
+  .film-page__trailer {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .film-page__info {
+    max-width: 100%;
+  }
+
+  .film-page__title-wrapper {
+    gap: $spacing-md;
+  }
+
+  .film-page__title-wrapper .badge {
+    height: 32px;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .film-page__meta {
+    font-size: 16px;
+  }
+
+  .film-page__rating {
+    gap: $spacing-xl;
+    padding: $spacing-md 0;
+  }
+
+  .film-page__description {
+    font-size: 16px;
+  }
+
+  .film-page__actions {
+    gap: $spacing-md;
+  }
+
+  .film-page__actions button {
+    flex: 1;
+    min-width: 160px;
+  }
+
+  .recommendations-item {
+    flex: 0 0 280px;
+  }
+
+  .recommendations-item .card__body {
+    margin: $spacing-lg $spacing-md $spacing-md;
+  }
+
+  .recommendations-item .card__footer {
+    margin: 0 $spacing-md $spacing-lg;
+  }
+
+  .recommendations-item .badge {
+    padding: $spacing-xs $spacing-sm;
+    font-size: 12px;
+    height: 28px;
+  }
+}
+
+@include mobile {
+  .film-page {
+    padding: $spacing-md;
+    width: 100%;
+  }
+
+  .back-button {
+    margin-bottom: $spacing-xl;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .film-page__content {
+    gap: $spacing-lg;
+  }
+
+  .film-page__title-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-sm;
+  }
+
+  .film-page__title-wrapper .badge {
+    align-self: flex-start;
+    height: 28px;
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .film-page__meta {
+    font-size: 14px;
+    gap: $spacing-xs;
+  }
+
+  .film-page__rating {
+    gap: $spacing-lg;
+    padding: $spacing-sm 0;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .film-page__description {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .film-page__actions {
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  .film-page__actions button {
+    width: 100%;
+  }
+
+  .recommendations-title {
+    margin-bottom: $spacing-xl;
+    font-size: 24px;
+  }
+
+  .recommendations-track {
+    gap: $spacing-lg;
+    padding-bottom: $spacing-lg;
+  }
+
+  .recommendations-item {
+    flex: 0 0 260px;
+  }
+
+  .recommendations-item .card {
+    max-height: 500px;
+  }
+}
+
+@media (max-width: 480px) {
+  .film-page {
+    padding: $spacing-sm;
+  }
+
+  .back-button {
+    margin-bottom: $spacing-lg;
+    padding: 10px $spacing-md;
+  }
+
+  .film-page__title-wrapper .badge {
+    height: 24px;
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .film-page__meta {
+    font-size: 13px;
+    flex-wrap: wrap;
+  }
+
+  .film-page__rating {
+    font-size: 14px;
+  }
+
+  .film-page__description {
+    font-size: 13px;
+  }
+
+  .recommendations-item {
+    flex: 0 0 220px;
+  }
+
+  .recommendations-item .card {
+    max-height: 450px;
+  }
+
+  .recommendations-item .card__body {
+    margin: $spacing-md $spacing-sm $spacing-sm;
+  }
+
+  .recommendations-item .card__footer {
+    margin: 0 $spacing-sm $spacing-md;
+  }
+
+  .recommendations-item .badge {
+    padding: 2px 6px;
+    font-size: 10px;
+    height: 24px;
+  }
+}
+

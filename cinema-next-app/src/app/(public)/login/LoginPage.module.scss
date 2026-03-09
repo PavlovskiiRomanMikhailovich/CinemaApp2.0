@@ -1,0 +1,66 @@
+@use 'styles/variables' as *;
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--base-background);
+  padding: $spacing-lg;
+}
+
+.card {
+  background: var(--card-background);
+  border-radius: $radius-lg;
+  padding: $spacing-3xl;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-md);
+}
+
+.title {
+  text-align: center;
+  margin-bottom: $spacing-2xl;
+  font-size: 24px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-xl;
+}
+
+.button {
+  width: 100%;
+  margin-top: $spacing-md;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+}
+
+.link {
+  color: var(--brand);
+  text-decoration: none;
+  font-size: 14px;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.error {
+  background: rgba(255, 77, 77, 0.1);
+  border: 1px solid var(--error-color);
+  border-radius: $radius-sm;
+  padding: $spacing-md;
+  color: var(--error-color);
+  margin-bottom: $spacing-lg;
+  text-align: center;
+  font-size: 14px;
+}

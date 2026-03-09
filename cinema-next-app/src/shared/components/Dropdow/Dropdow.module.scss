@@ -1,0 +1,62 @@
+@use 'styles/variables' as *;
+
+.dropdown {
+  position: relative;
+  width: 300px;
+}
+
+.header {
+  background: var(--card-background);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  padding: $spacing-md;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  height: 45px;
+
+  .open & {
+    border-color: var(--brand);
+  }
+}
+
+.arrow {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 6px;
+  background: var(--card-background);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.option {
+  padding: $spacing-md;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 14px;
+  
+  &:hover {
+    background: var(--card-image-bg);
+  }
+  
+  &.hovered {
+    background: var(--card-image-bg);
+  }
+  
+  .selected {
+    color: var(--brand);
+  }
+}

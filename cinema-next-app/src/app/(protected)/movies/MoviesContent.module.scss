@@ -1,0 +1,86 @@
+@use 'styles/variables' as *;
+
+.movies-content {
+  padding: $spacing-4xl $spacing-xl;
+  max-width: $max-width-content;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.movies-header {
+  margin-bottom: $spacing-md;
+}
+
+.movies-grid {
+  @include grid-auto-fit($card-min-width, $spacing-2xl);
+}
+
+.card-footer-content {
+  @include flex-between;
+  width: 100%;
+}
+
+.loading {
+  @include loading-state;
+}
+
+.error {
+  @include error-state;
+}
+
+.pagination-info {
+  margin-top: $spacing-4xl;
+  text-align: center;
+  color: var(--pagination-color);
+  font-size: 14px;
+}
+
+.card-actions {
+  display: flex;
+  gap: $spacing-sm;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.card-actions button {
+  flex: 1;
+  min-width: 100px;
+}
+
+.serch-container {
+  display: flex;
+  height: 45px;
+  gap: $spacing-3xl;
+}
+
+.noMore {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-secondary);
+}
+
+@include tablet {
+  .movies-content {
+    padding: $spacing-xl $spacing-lg;
+  }
+
+  .movies-content h1 {
+    font-size: 28px;
+    margin-bottom: $spacing-2xl;
+  }
+
+  .movies-grid {
+    gap: $spacing-lg;
+    grid-template-columns: repeat(auto-fill, minmax($card-mobile-width, 1fr));
+  }
+}
+
+@include mobile {
+  .movies-grid {
+    grid-template-columns: 1fr;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}
