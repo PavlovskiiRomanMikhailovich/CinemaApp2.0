@@ -1,5 +1,5 @@
 import React from 'react';
-import Loader from "components/Loader/Loader.tsx";
+import Loader from "components/Loader/Loader";
 import styles from './Button.module.scss';
 import classNames from 'classnames';
 

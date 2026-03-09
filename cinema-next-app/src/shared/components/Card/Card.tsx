@@ -1,6 +1,6 @@
 import React from 'react';
-import Text from 'components/Text/Text.tsx';
-import Badge from 'components/Badge/Badge.tsx';
+import Text from 'components/Text/Text';
+import Badge from 'components/Badge/Badge';
 import style from './Card.module.scss';
 import classNames from 'classnames';
 
