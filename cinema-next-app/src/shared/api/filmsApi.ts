@@ -31,6 +31,7 @@ export interface Image {
   formats?: {
     small?: ImageFormat;
     thumbnail?: ImageFormat;
+    large?: ImageFormat;
   };
 }
 
