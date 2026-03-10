@@ -13,7 +13,7 @@ export class CategoriesStore {
 
   constructor(rootStore: RootStore) {
   makeAutoObservable(this, { 
-    rootStore: false  // ← добавляем это везде
+    rootStore: false
   });
     this.rootStore = rootStore;
   }

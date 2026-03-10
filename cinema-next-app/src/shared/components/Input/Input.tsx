@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useRef, useImperativeHandle, forwardRef } from 'react';
 import styles from './Input.module.scss';
 

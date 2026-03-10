@@ -11,6 +11,24 @@ const apiClient = axios.create({
   paramsSerializer: params => qs.stringify(params, { encode: false }),
 });
 
+const cache = new Map();
+const CACHE_DURATION = 5 * 60 * 1000;
+
+function getCached(key: string) {
+  const cached = cache.get(key);
+  if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+    return cached.data;
+  }
+  return null;
+}
+
+function setCached(key: string, data: any) {
+  cache.set(key, {
+    data,
+    timestamp: Date.now(),
+  });
+}
+
 export interface Category {
   id: number;
   documentId: string;
@@ -74,10 +92,18 @@ export interface FilmsQueryParams {
 }
 
 export const getFilmById = async (documentId: string): Promise<FilmResponse> => {
+  const cacheKey = `film-${documentId}`;
+  const cached = getCached(cacheKey);
+  
+  if (cached) {
+    return cached;
+  }
+  
   try {
     const response = await apiClient.get(`/films/${documentId}`, { 
       params: POPULATE_CONFIG 
     });
+    setCached(cacheKey, response.data);
     return response.data;
   } catch (error) {
     console.error(`Error fetching film ${documentId}:`, error);
@@ -127,8 +153,16 @@ export const getFilms = async (params: FilmsQueryParams = {}): Promise<FilmsResp
 };
 
 export const getCategories = async (): Promise<StrapiResponse<Category[]>> => {
+  const cacheKey = 'categories';
+  const cached = getCached(cacheKey);
+  
+  if (cached) {
+    return cached;
+  }
+  
   try {
     const response = await apiClient.get('/film-categories');
+    setCached(cacheKey, response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching categories:', error);

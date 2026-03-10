@@ -22,7 +22,7 @@ export class FavoritesStore {
 
   constructor(rootStore: RootStore) {
   makeAutoObservable(this, { 
-    rootStore: false  // ← добавляем это везде
+    rootStore: false
   });
     this.rootStore = rootStore;
   }

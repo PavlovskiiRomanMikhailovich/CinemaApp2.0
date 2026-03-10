@@ -58,8 +58,8 @@ const FilmPage = () => {
   };
 
   if (loading) return <div className={styles.loading}>Загрузка фильма...</div>;
-  if (error) return <div className={styles.error}>Ошибка: {error}</div>;
-  if (!film) return <div className={styles.error}>Фильм не найден</div>;
+  if (error) throw error;
+  if (!film) throw new Error('Фильм не найден');
 
   const posterUrl = film.poster?.formats?.large?.url || film.poster?.url || '';
   const infoString = [

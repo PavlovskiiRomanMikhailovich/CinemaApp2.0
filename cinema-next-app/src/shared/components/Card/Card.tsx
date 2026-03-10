@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import Image from 'next/image';
 import Text from 'components/Text/Text';
 import Badge from 'components/Badge/Badge';
 import style from './Card.module.scss';
@@ -22,9 +25,9 @@ export type CardProps = {
     /** Слот для действия */
     actionSlot?: React.ReactNode;
     /** Рейтинг фильма (для плашки) */
-    rating?: number;  // ← добавляем
+    rating?: number;
     /** Длительность фильма (для плашки) */
-    duration?: number; // ← добавляем
+    duration?: number;
 };
 
 const Card: React.FC<CardProps> = ({
@@ -39,6 +42,10 @@ const Card: React.FC<CardProps> = ({
   rating,
   duration,
 }) => {
+  const imageUrl = image.startsWith('http') 
+    ? image 
+    : `https://front-school-strapi.ktsdev.ru${image}`;
+
   return (
     <div
       className={classNames(style.card, className)}
@@ -47,7 +54,14 @@ const Card: React.FC<CardProps> = ({
       tabIndex={onClick ? 0 : undefined}
     >
       <div className={style["card__imageWrapper"]}>
-        <img className={style["card__image"]} src={image} alt="" />
+        <Image 
+          className={style["card__image"]} 
+          src={imageUrl}
+          alt={typeof title === 'string' ? title : 'Film poster'}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          priority={false}
+        />
         <div className={style["card__badges"]}>
           {rating && <Badge type="rating" value={rating.toFixed(1)} />}
           {duration && <Badge type="duration" value={duration} />}

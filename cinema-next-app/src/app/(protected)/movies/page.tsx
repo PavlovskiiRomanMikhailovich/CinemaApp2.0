@@ -113,7 +113,7 @@ const MoviesContent = observer(({ title, category }: MoviesContentProps) => {
   }
   
   if (filmsStore.error) {
-    return <div className="error">Ошибка: {filmsStore.error}</div>;
+    throw filmsStore.error;
   }
 
   return (
