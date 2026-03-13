@@ -1,0 +1,132 @@
+@use 'styles/variables' as *;
+
+.dropdownWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.filterBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px $spacing-md;
+  border-radius: $radius-full;
+  border: 1.5px solid var(--card-border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    border-color $transition-fast,
+    color $transition-fast,
+    background $transition-fast;
+
+  &:hover {
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
+  }
+
+  &--active {
+    border-color: var(--brand);
+    background: rgba(229, 9, 20, 0.1);
+    color: var(--brand);
+
+    &:hover {
+      background: rgba(229, 9, 20, 0.16);
+    }
+  }
+
+  &--open {
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
+  }
+}
+
+.arrow {
+  flex-shrink: 0;
+  transition: transform $transition-fast;
+
+  &--up {
+    transform: rotate(180deg);
+  }
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 200;
+  background: var(--card-background);
+  border: 1px solid var(--card-border);
+  border-radius: $radius-lg;
+  box-shadow: var(--shadow-lg);
+  min-width: 140px;
+  max-height: 220px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  animation: dropIn $transition-fast forwards;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--card-border);
+    border-radius: 2px;
+  }
+}
+
+@keyframes dropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdownOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 7px $spacing-md;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  text-align: left;
+  transition:
+    background $transition-fast,
+    color $transition-fast;
+
+  &:hover {
+    background: var(--card-border);
+    color: var(--text-primary);
+  }
+
+  &--selected {
+    color: var(--brand);
+    font-weight: 500;
+  }
+
+  &--clear {
+    opacity: 0.6;
+    border-bottom: 1px solid var(--card-border);
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

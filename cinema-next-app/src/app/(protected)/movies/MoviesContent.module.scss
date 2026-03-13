@@ -84,3 +84,72 @@
     margin: 0 auto;
   }
 }
+
+// ─── Skeleton loader ──────────────────────────────────────────────────────────
+
+@keyframes shimmer {
+  0% {
+    background-position: -600px 0;
+  }
+  100% {
+    background-position: 600px 0;
+  }
+}
+
+.skeletonCard {
+  border-radius: $radius-lg;
+  overflow: hidden;
+  background: var(--card-background);
+  border: 1px solid var(--card-border);
+}
+
+.skeletonImage {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: linear-gradient(
+    90deg,
+    var(--card-background) 0%,
+    var(--card-border) 50%,
+    var(--card-background) 100%
+  );
+  background-size: 1200px 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.skeletonBody {
+  padding: $spacing-md;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.skeletonLine {
+  height: 13px;
+  border-radius: $radius-sm;
+  width: 80%;
+  background: linear-gradient(
+    90deg,
+    var(--card-background) 0%,
+    var(--card-border) 50%,
+    var(--card-background) 100%
+  );
+  background-size: 1200px 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+
+  &--wide {
+    width: 95%;
+    animation-delay: 0.1s;
+  }
+
+  &--short {
+    width: 50%;
+    animation-delay: 0.2s;
+  }
+}
+
+.loadingMore {
+  text-align: center;
+  padding: $spacing-xl;
+  color: var(--text-secondary);
+  font-size: 14px;
+}

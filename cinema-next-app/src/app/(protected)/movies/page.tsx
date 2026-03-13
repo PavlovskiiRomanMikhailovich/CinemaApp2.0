@@ -6,10 +6,16 @@ import { observer } from 'mobx-react-lite';
 import Card from 'components/Card/Card';
 import Text from 'components/Text/Text';
 import Button from 'components/Button/Button';
+import Input from 'components/Input/Input';
+import FiltersBar from 'components/FiltersBar/FiltersBar';
+import {
+  EMPTY_FILTERS,
+  type FiltersState,
+  parseFiltersFromParams,
+  parseFiltersForApi,
+} from 'components/FiltersBar/filtersConfig';
 import styles from './MoviesContent.module.scss';
 import { formatAgeLimit, isTruthy } from 'utils/dataFromat';
-import Input from 'components/Input/Input';
-import Dropdown from 'components/Dropdow/Dropdow';
 import { useFilmsStore, useCategoriesStore, useFavoritesStore } from 'providers/StoreProvider';
 
 interface MoviesContentProps {
@@ -20,12 +26,13 @@ interface MoviesContentProps {
 const MoviesContent = observer(({ title, category }: MoviesContentProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   const filmsStore = useFilmsStore();
   const categoriesStore = useCategoriesStore();
   const favoritesStore = useFavoritesStore();
-  
+
   const [tempSearchQuery, setTempSearchQuery] = useState('');
+  const [filters, setFilters] = useState<FiltersState>(EMPTY_FILTERS);
 
   useEffect(() => {
     categoriesStore.fetchCategories();
@@ -39,67 +46,68 @@ const MoviesContent = observer(({ title, category }: MoviesContentProps) => {
 
   useEffect(() => {
     const search = searchParams.get('search') || '';
-    const categories = searchParams.getAll('category');
-    
-    setTempSearchQuery(search);
-    categoriesStore.setTempSelectedCategories(categories);
-    categoriesStore.setSelectedCategories(categories);
-    
-    filmsStore.reset();
-    filmsStore.fetchFilms({ 
-      search, 
-      categoryIds: categories.map(Number),
-      page: 1 
-    });
-  }, [searchParams, filmsStore, categoriesStore]);
+    const parsedFilters = parseFiltersFromParams(searchParams);
 
-  const handleSearch = async () => {
-    categoriesStore.applySelection();
-    
-    // Создаем новые URL параметры
-    const params = new URLSearchParams();
-    if (tempSearchQuery) {
-      params.set('search', tempSearchQuery);
-    }
-    categoriesStore.selectedCategories.forEach(cat => {
-      params.append('category', cat);
-    });
-    
-    // Обновляем URL без перезагрузки страницы
-    router.push(`?${params.toString()}`);
-    
+    setTempSearchQuery(search);
+    setFilters(parsedFilters);
+
     filmsStore.reset();
-    await filmsStore.fetchFilms({ 
-      search: tempSearchQuery, 
-      categoryIds: categoriesStore.selectedCategoryIds,
-      page: 1 
+    filmsStore.fetchFilms({
+      search,
+      page: 1,
+      ...parseFiltersForApi(parsedFilters),
     });
+  }, [searchParams, filmsStore]);
+
+  const buildParams = (search: string, activeFilters: FiltersState): URLSearchParams => {
+    const params = new URLSearchParams();
+    if (search) params.set('search', search);
+    activeFilters.genres.forEach((g) => params.append('category', g));
+    if (activeFilters.year) params.set('year', activeFilters.year);
+    if (activeFilters.rating) params.set('rating', activeFilters.rating);
+    if (activeFilters.duration) params.set('duration', activeFilters.duration);
+    activeFilters.age.forEach((a) => params.append('age', a));
+    return params;
   };
 
-  const lastFilmRef = useCallback((node: HTMLDivElement) => {
-    if (filmsStore.loading || filmsStore.loadingMore) return;
-    
-    const observer = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && filmsStore.hasMore) {
-        filmsStore.loadMore({
-          search: tempSearchQuery,
-          categoryIds: categoriesStore.selectedCategoryIds
-        });
-      }
-    });
-    
-    if (node) observer.observe(node);
-    
-    return () => {
-      if (node) observer.disconnect();
-    };
-  }, [filmsStore.loading, filmsStore.loadingMore, filmsStore.hasMore, tempSearchQuery, categoriesStore.selectedCategoryIds]);
+  const handleSearch = () => {
+    router.push(`?${buildParams(tempSearchQuery, filters).toString()}`);
+  };
+
+  const handleFiltersChange = (newFilters: FiltersState) => {
+    router.push(`?${buildParams(tempSearchQuery, newFilters).toString()}`);
+  };
+
+  const lastFilmRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (filmsStore.loading || filmsStore.loadingMore) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && filmsStore.hasMore) {
+          filmsStore.loadMore({
+            search: tempSearchQuery,
+            ...parseFiltersForApi(filters),
+          });
+        }
+      });
+
+      if (node) observer.observe(node);
+      return () => {
+        if (node) observer.disconnect();
+      };
+    },
+    [filmsStore.loading, filmsStore.loadingMore, filmsStore.hasMore, tempSearchQuery, filters],
+  );
 
   const handleCardClick = (documentId: string) => {
     router.push(`/film/${documentId}`);
   };
 
-  const handleFavoriteClick = async (e: React.MouseEvent, filmId: number, isFavorite: boolean) => {
+  const handleFavoriteClick = async (
+    e: React.MouseEvent,
+    filmId: number,
+    isFavorite: boolean,
+  ) => {
     e.stopPropagation();
     if (isFavorite) {
       await favoritesStore.removeFromFavorites(filmId);
@@ -108,45 +116,55 @@ const MoviesContent = observer(({ title, category }: MoviesContentProps) => {
     }
   };
 
-  if (filmsStore.loading && filmsStore.films.length === 0) {
-    return <div className="loading">Загрузка фильмов...</div>;
-  }
-  
   if (filmsStore.error) {
     throw filmsStore.error;
   }
 
+  const isInitialLoading = filmsStore.loading && filmsStore.films.length === 0;
+
   return (
-    <div className={styles["movies-content"]}>
-      <div className={styles["serch-container"]}>
-        <Input 
+    <div className={styles['movies-content']}>
+      <div className={styles['serch-container']}>
+        <Input
           value={tempSearchQuery}
           onChange={(e) => setTempSearchQuery(e.target.value)}
           placeholder="Поиск по названию"
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
-        <Button variant='filled' onClick={handleSearch}>
+        <Button variant="filled" onClick={handleSearch}>
           Найти
         </Button>
       </div>
-      
-      <Dropdown
-        options={categoriesStore.categoryOptions}
-        value={categoriesStore.tempSelectedCategories}
-        onChange={(selected) => categoriesStore.setTempSelectedCategories(selected)}
-        placeholder="Фильтры"
-        multiple
+
+      <FiltersBar
+        filters={filters}
+        categoryOptions={categoriesStore.categoryOptions}
+        onChange={handleFiltersChange}
       />
-      
-      <Text className={styles['movies-header']} color='primary' tag='h1'>{title}</Text>
-      
-      <div className={styles["movies-grid"]}>
-        {filmsStore.films.map((film, index) => {
+
+      <Text className={styles['movies-header']} color="primary" tag="h1">
+        {title}
+      </Text>
+
+      <div className={styles['movies-grid']}>
+        {isInitialLoading
+          ? Array.from({ length: 8 }, (_, i) => (
+              <div key={i} className={styles.skeletonCard}>
+                <div className={styles.skeletonImage} />
+                <div className={styles.skeletonBody}>
+                  <div className={styles.skeletonLine} />
+                  <div className={`${styles.skeletonLine} ${styles['skeletonLine--wide']}`} />
+                  <div className={`${styles.skeletonLine} ${styles['skeletonLine--short']}`} />
+                </div>
+              </div>
+            ))
+          : filmsStore.films.map((film, index) => {
           const posterUrl = film.poster?.formats?.small?.url || film.poster?.url || '';
-          
+
           const infoString = [
             film.releaseYear,
             film.category?.title,
-            formatAgeLimit(film.ageLimit)
+            formatAgeLimit(film.ageLimit),
           ]
             .filter(isTruthy)
             .join('  •  ');
@@ -154,15 +172,15 @@ const MoviesContent = observer(({ title, category }: MoviesContentProps) => {
           const isFavorite = favoritesStore.isFavorite(film.id);
 
           const actionSlot = (
-            <div className={styles["card-actions"]}>
-              <Button 
+            <div className={styles['card-actions']}>
+              <Button
                 variant={isFavorite ? 'filled' : 'outline'}
                 onClick={(e) => handleFavoriteClick(e, film.id, isFavorite)}
               >
                 {isFavorite ? 'В избранном' : 'В избранное'}
               </Button>
-              <Button 
-                variant='filled'
+              <Button
+                variant="filled"
                 onClick={(e) => {
                   e.stopPropagation();
                   console.log('Смотреть:', film.title);
@@ -174,17 +192,14 @@ const MoviesContent = observer(({ title, category }: MoviesContentProps) => {
           );
 
           const isLastElement = index === filmsStore.films.length - 1;
-          
+
           return (
-            <div
-              key={film.documentId}
-              ref={isLastElement ? lastFilmRef : null}
-            >
+            <div key={film.documentId} ref={isLastElement ? lastFilmRef : null}>
               <Card
                 image={posterUrl}
                 captionSlot={infoString}
                 title={film.title}
-                rating={film.rating} 
+                rating={film.rating}
                 duration={film.duration}
                 subtitle={film.shortDescription || film.description}
                 actionSlot={actionSlot}
@@ -194,11 +209,11 @@ const MoviesContent = observer(({ title, category }: MoviesContentProps) => {
           );
         })}
       </div>
-      
+
       {filmsStore.loadingMore && (
         <div className={styles.loadingMore}>Загрузка...</div>
       )}
-      
+
       {!filmsStore.hasMore && filmsStore.films.length > 0 && (
         <div className={styles.noMore}>Больше фильмов нет</div>
       )}

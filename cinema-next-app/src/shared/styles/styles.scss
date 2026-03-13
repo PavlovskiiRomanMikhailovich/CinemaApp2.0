@@ -1,11 +1,82 @@
 @import './Roboto/fonts.css';
 
+// --- CSS custom properties (theme tokens) ---
+// Живут здесь, а не в variables.scss, потому что variables.scss используется через
+// @use в CSS Modules — Turbopack запрещает глобальные селекторы в таких файлах.
+
+:root {
+  --base-background: #141414;
+  --card-background: #1E1E1E;
+  --brand: #E50914;
+  --brand-active: #B20710;
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #B3B3B3;
+  --text-accent: var(--brand);
+
+  --button-primary-text: #FFFFFF;
+
+  --header-border: #222222;
+  --card-border: rgba(255, 255, 255, 0.1);
+
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-white: 0 0 15px rgba(255, 255, 255, 0.3);
+
+  --card-image-bg: #2a2a2a;
+
+  --error-color: #ff4d4d;
+  --loading-color: #666;
+  --pagination-color: #999;
+
+  --toggle-track-bg: #2a2a2a;
+  --toggle-track-border: #3a3a3a;
+  --toggle-icon-inactive: #555;
+  --toggle-icon-active: #ffffff;
+}
+
+[data-theme='light'] {
+  --base-background: #F5F5F5;
+  --card-background: #FFFFFF;
+  --brand: #E50914;
+  --brand-active: #B20710;
+
+  --text-primary: #141414;
+  --text-secondary: #555555;
+  --text-accent: var(--brand);
+
+  --button-primary-text: #FFFFFF;
+
+  --header-border: #E2E2E2;
+  --card-border: rgba(0, 0, 0, 0.08);
+
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+  --shadow-white: 0 0 15px rgba(0, 0, 0, 0.12);
+
+  --card-image-bg: #EBEBEB;
+
+  --error-color: #e53935;
+  --loading-color: #888;
+  --pagination-color: #666;
+
+  --toggle-track-bg: #E0E0E0;
+  --toggle-track-border: #CCCCCC;
+  --toggle-icon-inactive: #aaaaaa;
+  --toggle-icon-active: #141414;
+}
+
+// --- Global base styles ---
+
 html, body {
   font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
   background-color: var(--base-background);
   color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 * {

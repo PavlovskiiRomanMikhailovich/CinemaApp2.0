@@ -69,25 +69,24 @@ export class FilmsStore {
     this.error = null;
   }
 
-  async fetchFilms(params: { search?: string; categoryIds?: number[]; page?: number } = {}) {
-    const { search, categoryIds, page = 1 } = params;
-    
+  async fetchFilms(params: Omit<FilmsQueryParams, 'pageSize'> = {}) {
+    const { page = 1, ...rest } = params;
+
     if (page === 1) {
       this.setLoading(true);
     } else {
       this.setLoadingMore(true);
     }
-    
+
     this.setError(null);
-    
+
     try {
       const queryParams: FilmsQueryParams = {
+        ...rest,
         page,
         pageSize: this.pageSize,
-        search,
-        categoryIds
       };
-      
+
       const response = await getFilms(queryParams);
       
       runInAction(() => {
@@ -117,7 +116,7 @@ export class FilmsStore {
     }
   }
 
-  loadMore(params: { search?: string; categoryIds?: number[] }) {
+  loadMore(params: Omit<FilmsQueryParams, 'page' | 'pageSize'>) {
     if (!this.hasMore || this.loadingMore || this.loading) return;
     this.fetchFilms({ ...params, page: this.currentPage + 1 });
   }

@@ -89,6 +89,12 @@ export interface FilmsQueryParams {
   categoryIds?: number[];
   page?: number;
   pageSize?: number;
+  releaseYear?: number;
+  ratingMin?: number;
+  ratingMax?: number;
+  durationMin?: number;
+  durationMax?: number;
+  ageLimits?: number[];
 }
 
 export const getFilmById = async (documentId: string): Promise<FilmResponse> => {
@@ -133,11 +139,29 @@ export const getFilms = async (params: FilmsQueryParams = {}): Promise<FilmsResp
     }
 
     if (params.categoryIds && params.categoryIds.length > 0) {
-      filters.category = {
-        id: {
-          $in: params.categoryIds
-        }
-      };
+      filters.category = { id: { $in: params.categoryIds } };
+    }
+
+    if (params.releaseYear) {
+      filters.releaseYear = { $eq: params.releaseYear };
+    }
+
+    if (params.ratingMin !== undefined || params.ratingMax !== undefined) {
+      filters.rating = {};
+      if (params.ratingMin !== undefined) filters.rating.$gte = params.ratingMin;
+      if (params.ratingMax !== undefined) filters.rating.$lte = params.ratingMax;
+    }
+
+    if (params.durationMin !== undefined || params.durationMax !== undefined) {
+      filters.duration = {};
+      if (params.durationMin !== undefined) filters.duration.$gte = params.durationMin;
+      if (params.durationMax !== undefined && params.durationMax < 999) {
+        filters.duration.$lte = params.durationMax;
+      }
+    }
+
+    if (params.ageLimits && params.ageLimits.length > 0) {
+      filters.ageLimit = { $in: params.ageLimits };
     }
 
     if (Object.keys(filters).length > 0) {

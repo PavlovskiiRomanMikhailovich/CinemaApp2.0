@@ -1,29 +1,6 @@
-:root {
-  --base-background: #141414;
-  --card-background: #1E1E1E;
-  --brand: #E50914;
-  --brand-active: #B20710;
-  
-  --text-primary: #FFFFFF;
-  --text-secondary: #B3B3B3;
-  --text-accent: var(--brand);
-  
-  --button-primary-text: #FFFFFF;
-  
-  --header-border: #222222;
-  --card-border: rgba(255, 255, 255, 0.1);
-  
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --shadow-white: 0 0 15px rgba(255, 255, 255, 0.3);
-  
-  --card-image-bg: #2a2a2a;
-  
-  --error-color: #ff4d4d;
-  --loading-color: #666;
-  --pagination-color: #999;
-}
+// SCSS-переменные и миксины для использования в CSS Modules через @use.
+// Этот файл НЕ должен содержать глобальных CSS-селекторов (:root, [data-theme] и т.д.)
+// CSS-переменные темы находятся в styles.scss.
 
 $max-width-content: 1200px;
 $max-width-film-page: 1400px;
@@ -49,10 +26,6 @@ $radius-xl: 12px;
 $radius-2xl: 24px;
 $radius-full: 9999px;
 
-$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.25);
-$shadow-md: 0 4px 10px rgba(0, 0, 0, 0.25);
-$shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.2);
-
 $transition-fast: 0.2s ease;
 $transition-normal: 0.3s ease;
 
@@ -60,6 +33,11 @@ $breakpoint-mobile: 480px;
 $breakpoint-tablet: 768px;
 $breakpoint-desktop: 1200px;
 $breakpoint-large: 1400px;
+
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.25);
+$shadow-md: 0 4px 10px rgba(0, 0, 0, 0.25);
+$shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.2);
+
 
 @mixin mobile {
   @media (max-width: #{$breakpoint-mobile}) {
@@ -131,9 +109,9 @@ $breakpoint-large: 1400px;
 
 @mixin card-hover {
   transition: box-shadow $transition-fast, transform $transition-fast;
-  
+
   &:hover {
-    box-shadow: $shadow-md;
+    box-shadow: var(--shadow-md);
     transform: translateY(-2px);
   }
 }
@@ -155,7 +133,7 @@ $breakpoint-large: 1400px;
   -ms-overflow-style: none;
   padding: $spacing-sm 0;
   width: 100%;
-  
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -174,12 +152,12 @@ $breakpoint-large: 1400px;
   padding: 0;
   backdrop-filter: blur(2px);
   border: none;
-  
+
   &:hover {
     box-shadow: var(--shadow-white);
     transform: scale(1.05);
   }
-  
+
   img {
     width: 20px;
     height: 20px;
