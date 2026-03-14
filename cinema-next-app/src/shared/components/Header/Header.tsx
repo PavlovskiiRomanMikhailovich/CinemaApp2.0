@@ -46,6 +46,15 @@ const Header = () => {
         >
           Подборки
         </Link>
+        <Link
+          href="/trends"
+          className={classNames(
+            styles['header__link'],
+            { [styles['active']]: isActive('/trends') }
+          )}
+        >
+          Тренды
+        </Link>
       </nav>
       <div className={styles['icons-container']}>
         <Link href="/favorites">

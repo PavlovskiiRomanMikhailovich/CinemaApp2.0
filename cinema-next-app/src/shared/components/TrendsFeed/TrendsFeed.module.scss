@@ -1,0 +1,83 @@
+@use 'styles/variables' as *;
+
+$reel-w: 400px;
+$reel-h: 711px;
+
+// Весь экран занят лентой (поверх хедера)
+.feed {
+  position: fixed;
+  inset: 0;
+  background: #111;
+  @include flex-center;
+  z-index: 100;
+}
+
+// Контейнер прокрутки — 400×711 на десктопе, fullscreen на мобиле
+.scroll {
+  width: $reel-w;
+  height: $reel-h;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  border-radius: $radius-xl;
+  position: relative;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include mobile {
+    width: 100vw;
+    height: 100dvh;
+    border-radius: 0;
+  }
+}
+
+.sentinel {
+  height: 1px;
+  width: 100%;
+}
+
+// Три пульсирующие точки-лоадер
+.loader {
+  height: 64px;
+  @include flex-center;
+  gap: $spacing-sm;
+
+  span {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: $radius-full;
+    background: rgba(255, 255, 255, 0.5);
+    animation: pulse 1.2s ease-in-out infinite;
+
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 80%, 100% {
+    transform: scale(0.7);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.end {
+  height: 64px;
+  @include flex-center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 13px;
+}
