@@ -29,22 +29,13 @@ const Header = () => {
           Фильмы
         </Link>
         <Link
-          href="/new_films"
+          href="/favorites"
           className={classNames(
             styles['header__link'],
-            { [styles['active']]: isActive('/new_films') }
+            { [styles['active']]: isActive('/favorites') }
           )}
         >
-          Новинки
-        </Link>
-        <Link
-          href="/recomendations"
-          className={classNames(
-            styles['header__link'],
-            { [styles['active']]: isActive('/recomendations') }
-          )}
-        >
-          Подборки
+          Избранное
         </Link>
         <Link
           href="/trends"
