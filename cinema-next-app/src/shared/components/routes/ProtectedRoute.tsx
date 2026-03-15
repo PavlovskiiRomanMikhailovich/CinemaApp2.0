@@ -15,7 +15,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   }, [authStore.isAuthenticated, router]);
 
   if (!authStore.isAuthenticated) {
-    return null; // или спиннер загрузки
+    return null;
   }
 
   return <>{children}</>;

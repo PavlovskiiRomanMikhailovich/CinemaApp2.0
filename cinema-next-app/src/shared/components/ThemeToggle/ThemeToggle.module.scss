@@ -1,0 +1,55 @@
+@use 'styles/variables' as *;
+
+.placeholder {
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  flex-shrink: 0;
+}
+
+.toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+
+  &:focus-visible .track {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  background-color: var(--toggle-track-bg);
+  border: 1.5px solid var(--toggle-track-border);
+  position: relative;
+  transition:
+    background-color $transition-normal,
+    border-color $transition-normal;
+}
+
+.thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: var(--text-secondary);
+  transition:
+    transform $transition-normal,
+    background-color $transition-normal;
+}
+
+.toggle--light .thumb {
+  transform: translateX(18px);
+  background-color: var(--brand);
+}

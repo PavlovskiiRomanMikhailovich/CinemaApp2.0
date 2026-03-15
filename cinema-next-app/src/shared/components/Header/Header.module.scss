@@ -7,8 +7,8 @@
   border-bottom: 1px solid var(--header-border);
 
   @include mobile {
-    padding: 12px;
-    justify-content: center;
+    padding: 10px $spacing-md;
+    justify-content: space-between;
   }
 }
 
@@ -37,7 +37,9 @@
   }
 
   @include mobile {
-    gap: $spacing-xl;
+    gap: $spacing-md;
+    flex-wrap: nowrap;
+    overflow: hidden;
   }
 }
 
@@ -50,7 +52,8 @@
   transition: color $transition-fast;
 
   @include mobile {
-    font-size: 14px;
+    font-size: 13px;
+    white-space: nowrap;
   }
 
   &:hover {
@@ -88,7 +91,12 @@
   }
 
   @include mobile {
-    display: none;
+    display: flex;
+
+    // Bookmark icon hidden on mobile — Избранное is in the nav
+    > a {
+      display: none;
+    }
   }
 
   .icon-wrapper {
