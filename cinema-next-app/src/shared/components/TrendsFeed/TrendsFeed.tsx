@@ -1,66 +1,61 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTrendsStore } from 'stores/trendsStore';
+import { useFavoritesStore, useAuthStore } from 'providers/StoreProvider';
 import TrendItem from 'components/TrendItem/TrendItem';
 import styles from './TrendsFeed.module.scss';
 
-/** Кол-во слотов вокруг активного, для которых рендерим реальный iframe */
 const RENDER_WINDOW = 2;
 
 const TrendsFeed = () => {
-  const {
-    items,
-    loading,
-    hasMore,
-    activeIndex,
-    likedIds,
-    fetchNextPage,
-    toggleLike,
-    setActiveIndex,
-  } = useTrendsStore();
-
+  const router = useRouter();
+  const { items, loading, hasMore, activeIndex, fetchNextPage, setActiveIndex } = useTrendsStore();
+  const favoritesStore = useFavoritesStore();
+  const authStore = useAuthStore();
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  // Первичная загрузка
   useEffect(() => {
-    if (items.length === 0) {
-      fetchNextPage();
+    if (authStore.isAuthenticated && favoritesStore.favorites.length === 0) {
+      favoritesStore.fetchFavorites();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authStore.isAuthenticated]);
+
+  useEffect(() => {
+    if (items.length === 0) fetchNextPage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Infinite scroll: следим за sentinel-элементом в конце списка
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && hasMore && !loading) {
-          fetchNextPage();
-        }
-      },
+    const io = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting && hasMore && !loading) fetchNextPage(); },
       { threshold: 0.1 },
     );
-
-    observer.observe(sentinel);
-    return () => observer.disconnect();
+    io.observe(sentinel);
+    return () => io.disconnect();
   }, [hasMore, loading, fetchNextPage]);
 
-  // Callback, который TrendItem вызывает, когда становится активным (>= 70% видимости)
   const handleBecameActive = useCallback(
     (documentId: string) => {
-      const index = items.findIndex(item => item.documentId === documentId);
-      if (index !== -1 && index !== activeIndex) {
-        setActiveIndex(index);
-      }
+      const index = items.findIndex(i => i.documentId === documentId);
+      if (index !== -1 && index !== activeIndex) setActiveIndex(index);
     },
     [items, activeIndex, setActiveIndex],
   );
 
   return (
     <div className={styles.feed}>
+      <button className={styles.backBtn} onClick={() => router.back()} aria-label="Назад">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+        <span>Назад</span>
+      </button>
+
       <div className={styles.scroll}>
         {items.map((item, index) => (
           <TrendItem
@@ -68,20 +63,15 @@ const TrendsFeed = () => {
             item={item}
             isActive={index === activeIndex}
             isVisible={Math.abs(index - activeIndex) <= RENDER_WINDOW}
-            isLiked={likedIds.has(item.documentId)}
-            onLike={toggleLike}
             onBecameActive={handleBecameActive}
           />
         ))}
 
-        {/* Sentinel для infinite scroll */}
         <div ref={sentinelRef} className={styles.sentinel} />
 
         {loading && (
           <div className={styles.loader}>
-            <span />
-            <span />
-            <span />
+            <span /><span /><span />
           </div>
         )}
 

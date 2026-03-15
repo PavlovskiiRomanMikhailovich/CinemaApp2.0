@@ -2,7 +2,10 @@
 
 $item-w: 400px;
 $item-h: 711px;
+$panel-h: 140px;
+$panel-h-exp: 340px;
 
+// ─── Корневой контейнер слайда ────────────────────────────────────────────────
 .item {
   width: $item-w;
   height: $item-h;
@@ -19,81 +22,330 @@ $item-h: 711px;
   }
 }
 
-.media {
-  width: 100%;
-  height: 100%;
-}
-
-.iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  display: block;
-}
-
-.poster {
+// ─── Заглушка (вне окна виртуализации) ───────────────────────────────────────
+.fallback {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  filter: brightness(0.4);
 }
 
-.overlay {
+// ─── Горизонтальный трек (scroll-snap внутри) ────────────────────────────────
+.track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  cursor: grab;
+  user-select: none;
+
+  &::-webkit-scrollbar { display: none; }
+
+  &:active { cursor: grabbing; }
+}
+
+// ─── Один фото-слайд ─────────────────────────────────────────────────────────
+.slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  overflow: hidden;
+}
+
+.slideImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+// ─── Трейлер-слайд ───────────────────────────────────────────────────────────
+.trailerSlide {
+  @include flex-col-center;
+  background: #000;
+}
+
+.trailerBg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.3) blur(6px);
+  pointer-events: none;
+}
+
+.trailerCenter {
+  position: relative;
+  z-index: 1;
+  @include flex-col-center;
+  gap: $spacing-md;
+}
+
+.playBtn {
+  width: 76px;
+  height: 76px;
+  border-radius: $radius-full;
+  background: rgba(229, 9, 20, 0.85);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  @include flex-center;
+  cursor: pointer;
+  transition:
+    transform $transition-fast,
+    background $transition-fast;
+
+  &:hover {
+    background: var(--brand);
+    transform: scale(1.08);
+  }
+
+  svg {
+    margin-left: 4px; // оптический сдвиг треугольника
+  }
+}
+
+.playLabel {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+}
+
+// ─── Затемнение при раскрытом описании ───────────────────────────────────────
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 5;
+  cursor: pointer;
+  animation: fadeIn 0.22s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+// ─── Нижняя панель ───────────────────────────────────────────────────────────
+.panel {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: $spacing-3xl $spacing-xl $spacing-2xl;
+  z-index: 10;
+  padding: $spacing-4xl $spacing-xl $spacing-xl;
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.85) 0%,
-    rgba(0, 0, 0, 0.4) 60%,
+    rgba(0, 0, 0, 0.88) 0%,
+    rgba(0, 0, 0, 0.55) 55%,
     transparent 100%
   );
   display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  transition: background $transition-normal;
+
+  // При раскрытии — сплошной тёмный фон, фиксированная высота с прокруткой внутри
+  &--expanded {
+    background: rgba(10, 10, 10, 0.96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    // Панель растёт снизу вверх, но не выходит за экран
+    max-height: 75%;
+    overflow-y: auto;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+}
+
+// ─── Dot-индикаторы ───────────────────────────────────────────────────────────
+.dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: $spacing-xs;
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: $radius-full;
+  background: rgba(255, 255, 255, 0.35);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition:
+    width $transition-fast,
+    background $transition-fast;
+
+  &--active {
+    width: 18px;
+    background: #fff;
+  }
+}
+
+// ─── Тело панели: текст + кнопки ─────────────────────────────────────────────
+.body {
+  display: flex;
   align-items: flex-end;
-  justify-content: space-between;
   gap: $spacing-md;
-  pointer-events: none;
+}
+
+// ─── Текстовая область ───────────────────────────────────────────────────────
+.textWrap {
+  flex: 1;
+  cursor: pointer;
+  min-width: 0;
 }
 
 .title {
-  @include text-ellipsis(2);
   color: #fff;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.35;
-  text-decoration: none;
-  flex: 1;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
-  pointer-events: all;
-  transition: color $transition-fast;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.7);
+  margin: 0 0 $spacing-xs;
+}
 
-  &:hover {
-    color: var(--brand);
+.desc {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0 0 $spacing-xs;
+  // Свёрнуто: 2 строки через webkit-box
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  &--expanded {
+    // Выходим из webkit-box режима → обычный блок со скроллом
+    display: block;
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+    max-height: 180px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.2) transparent;
+
+    &::-webkit-scrollbar { width: 3px; }
+    &::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 2px; }
+    &::-webkit-scrollbar-track { background: transparent; }
   }
 }
 
-.like {
+.toggle {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color $transition-fast;
+
+  .textWrap:hover & {
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+// ─── Кнопки действий ─────────────────────────────────────────────────────────
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
   flex-shrink: 0;
-  background: transparent;
-  border: none;
-  cursor: pointer;
+}
+
+.btn {
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-full;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   color: #fff;
   @include flex-center;
-  padding: $spacing-sm;
-  border-radius: $radius-full;
-  pointer-events: all;
+  cursor: pointer;
+  text-decoration: none;
   transition:
-    color $transition-fast,
+    background $transition-fast,
+    border-color $transition-fast,
     transform $transition-fast;
-  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.6));
+
+  svg { flex-shrink: 0; }
 
   &:hover {
-    transform: scale(1.2);
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.55);
+    transform: scale(1.08);
   }
 
-  &--active {
+  &--fav {
+    background: rgba(229, 9, 20, 0.2);
+    border-color: var(--brand);
     color: var(--brand);
+
+    &:hover {
+      background: rgba(229, 9, 20, 0.35);
+    }
   }
+}
+
+// ─── Модалка трейлера — position:fixed чтобы выйти из overflow:hidden ────────
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: #000;
+  @include flex-center;
+  animation: fadeIn 0.2s ease;
+}
+
+.modalClose {
+  position: fixed;
+  top: $spacing-lg;
+  right: $spacing-lg;
+  z-index: 9001;
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-full;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  @include flex-center;
+  cursor: pointer;
+  transition:
+    background $transition-fast,
+    transform $transition-fast;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: scale(1.1);
+  }
+}
+
+// Обычный height: 100% — никаких хаков, VK-панель управления видна и кликабельна
+.modalIframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
 }

@@ -4,8 +4,10 @@ export interface TrendFilm {
   id: number;
   documentId: string;
   title: string;
+  shortDescription: string;
   trailerUrl: string;
   posterUrl: string;
+  gallery: string[];
 }
 
 interface TrendsState {
@@ -13,10 +15,8 @@ interface TrendsState {
   page: number;
   hasMore: boolean;
   loading: boolean;
-  likedIds: Set<string>;
   activeIndex: number;
   fetchNextPage: () => Promise<void>;
-  toggleLike: (documentId: string) => void;
   setActiveIndex: (index: number) => void;
 }
 
@@ -25,7 +25,6 @@ export const useTrendsStore = create<TrendsState>((set, get) => ({
   page: 0,
   hasMore: true,
   loading: false,
-  likedIds: new Set(),
   activeIndex: 0,
 
   fetchNextPage: async () => {
@@ -50,18 +49,6 @@ export const useTrendsStore = create<TrendsState>((set, get) => ({
     } catch {
       set({ loading: false });
     }
-  },
-
-  toggleLike: (documentId: string) => {
-    set(state => {
-      const next = new Set(state.likedIds);
-      if (next.has(documentId)) {
-        next.delete(documentId);
-      } else {
-        next.add(documentId);
-      }
-      return { likedIds: next };
-    });
   },
 
   setActiveIndex: (index: number) => set({ activeIndex: index }),

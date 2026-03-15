@@ -3,6 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 const STRAPI_URL = 'https://front-school-strapi.ktsdev.ru/api';
 const PAGE_SIZE = 5;
 
+function toAbsUrl(raw: string): string {
+  if (!raw) return '';
+  return raw.startsWith('http') ? raw : `https://front-school-strapi.ktsdev.ru${raw}`;
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const page = Math.max(1, Number(searchParams.get('page') || '1'));
@@ -11,6 +16,7 @@ export async function GET(req: NextRequest) {
     'pagination[page]': String(page),
     'pagination[pageSize]': String(PAGE_SIZE),
     'populate[poster]': 'true',
+    'populate[gallery]': 'true',
   });
 
   try {
@@ -27,19 +33,30 @@ export async function GET(req: NextRequest) {
     const items = (data.data as any[])
       .filter((film: any) => Boolean(film.trailerUrl))
       .map((film: any) => {
-        const raw: string = film.poster?.url ?? '';
-        const posterUrl = raw
-          ? raw.startsWith('http')
-            ? raw
-            : `https://front-school-strapi.ktsdev.ru${raw}`
-          : '';
+        const posterUrl = toAbsUrl(
+          film.poster?.formats?.large?.url ?? film.poster?.url ?? '',
+        );
+
+        // Галерея: предпочитаем large/medium формат, fallback на оригинал
+        const gallery: string[] = ((film.gallery as any[]) ?? [])
+          .map((img: any) =>
+            toAbsUrl(
+              img.formats?.large?.url ??
+              img.formats?.medium?.url ??
+              img.url ??
+              '',
+            ),
+          )
+          .filter(Boolean);
 
         return {
           id: film.id as number,
           documentId: film.documentId as string,
           title: film.title as string,
+          shortDescription: (film.shortDescription ?? '') as string,
           trailerUrl: film.trailerUrl as string,
           posterUrl,
+          gallery,
         };
       });
 
