@@ -8,8 +8,6 @@ export interface FilterOption {
   label: string;
 }
 
-// ─── Shared internals ─────────────────────────────────────────────────────────
-
 const ChevronIcon = ({ up }: { up?: boolean }) => (
   <svg
     className={`${styles.arrow} ${up ? styles['arrow--up'] : ''}`}
@@ -59,8 +57,6 @@ function useClickOutside(
     return () => document.removeEventListener('mousedown', handler);
   }, [isOpen, ref, onCloseStable]);
 }
-
-// ─── FilterDropdown — single select ──────────────────────────────────────────
 
 export interface FilterDropdownProps {
   label: string;
@@ -143,8 +139,6 @@ export const FilterDropdown = ({
     </div>
   );
 };
-
-// ─── FilterMultiDropdown — multi select ──────────────────────────────────────
 
 export interface FilterMultiDropdownProps {
   label: string;

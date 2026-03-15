@@ -20,12 +20,10 @@ const TrendsFeed = () => {
     if (authStore.isAuthenticated && favoritesStore.favorites.length === 0) {
       favoritesStore.fetchFavorites();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authStore.isAuthenticated]);
 
   useEffect(() => {
     if (items.length === 0) fetchNextPage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

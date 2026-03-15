@@ -24,7 +24,6 @@ const TrendItem = observer(({ item, isActive, isVisible, onBecameActive }: Trend
   const trackRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // pointer-drag для десктопа
   const dragging    = useRef(false);
   const dragX0      = useRef(0);
   const scrollLeft0 = useRef(0);
@@ -32,11 +31,9 @@ const TrendItem = observer(({ item, isActive, isVisible, onBecameActive }: Trend
   const favStore = useFavoritesStore();
   const isFav    = favStore.isFavorite(item.id);
 
-  // Картинки: gallery или poster как fallback
   const images     = item.gallery.length > 0 ? item.gallery : item.posterUrl ? [item.posterUrl] : [];
-  const totalSlides = images.length + 1; // +1 трейлер-слайд
+  const totalSlides = images.length + 1;
 
-  // ── Сбрасываем состояние когда элемент уходит из вьюпорта ──────────────────
   useEffect(() => {
     if (!isActive) {
       setSlide(0);
@@ -46,7 +43,6 @@ const TrendItem = observer(({ item, isActive, isVisible, onBecameActive }: Trend
     }
   }, [isActive]);
 
-  // ── IntersectionObserver ───────────────────────────────────────────────────
   useEffect(() => {
     const el = rootRef.current;
     if (!el) return;
@@ -61,7 +57,6 @@ const TrendItem = observer(({ item, isActive, isVisible, onBecameActive }: Trend
     return () => io.disconnect();
   }, [item.documentId, onBecameActive]);
 
-  // ── Синхронизация dots ↔ нативный скролл ──────────────────────────────────
   const onTrackScroll = useCallback(() => {
     const t = trackRef.current;
     if (!t) return;
@@ -69,16 +64,13 @@ const TrendItem = observer(({ item, isActive, isVisible, onBecameActive }: Trend
     if (idx !== slide) setSlide(idx);
   }, [slide]);
 
-  // ── Переход к слайду (из dots) ────────────────────────────────────────────
   const goTo = useCallback((idx: number) => {
     setSlide(idx);
     trackRef.current?.scrollTo({ left: idx * (trackRef.current.offsetWidth), behavior: 'smooth' });
   }, []);
 
-  // ── Pointer-drag (только мышь — touch обрабатывает нативный скролл) ────────
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.pointerType === 'touch') return;
-    // Не перехватываем клики по интерактивным элементам внутри трека
     if ((e.target as HTMLElement).closest('button, a, [role="button"]')) return;
     dragging.current    = true;
     dragX0.current      = e.clientX;
@@ -91,7 +83,6 @@ const TrendItem = observer(({ item, isActive, isVisible, onBecameActive }: Trend
   };
   const onPointerUp = () => { dragging.current = false; };
 
-  // ── Fullscreen при открытии трейлера ─────────────────────────────────────
   useEffect(() => {
     if (!trailerOpen) return;
 
@@ -117,19 +108,16 @@ const TrendItem = observer(({ item, isActive, isVisible, onBecameActive }: Trend
     }
   }, []);
 
-  // ── Избранное ──────────────────────────────────────────────────────────────
   const handleFav = useCallback(async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (isFav) await favStore.removeFromFavorites(item.id);
     else       await favStore.addToFavorites(item.id);
   }, [isFav, item.id, favStore]);
 
-  // ── Placeholder пока слайд вне окна виртуализации ─────────────────────────
   if (!isVisible) {
     return (
       <div ref={rootRef} className={styles.item}>
         {item.posterUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
           <img src={item.posterUrl} alt={item.title} className={styles.fallback} />
         )}
       </div>
@@ -138,8 +126,6 @@ const TrendItem = observer(({ item, isActive, isVisible, onBecameActive }: Trend
 
   return (
     <div ref={rootRef} className={styles.item}>
-
-      {/* ══ Горизонтальная галерея ══════════════════════════════════════════ */}
       <div
         ref={trackRef}
         className={styles.track}
@@ -151,15 +137,12 @@ const TrendItem = observer(({ item, isActive, isVisible, onBecameActive }: Trend
       >
         {images.map((url, i) => (
           <div key={i} className={styles.slide}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={url} alt="" className={styles.slideImg} draggable={false} />
           </div>
         ))}
 
-        {/* Слайд-трейлер (последний) */}
         <div className={classNames(styles.slide, styles.trailerSlide)}>
           {item.posterUrl && (
-            // eslint-disable-next-line @next/next/no-img-element
             <img src={item.posterUrl} alt="" className={styles.trailerBg} draggable={false} />
           )}
           <div className={styles.trailerCenter}>
@@ -177,17 +160,14 @@ const TrendItem = observer(({ item, isActive, isVisible, onBecameActive }: Trend
         </div>
       </div>
 
-      {/* ══ Затемнение галереи при раскрытии описания ══════════════════════ */}
       {expanded && (
         <div className={styles.backdrop} onClick={() => setExpanded(false)} />
       )}
 
-      {/* ══ Нижняя панель: dots + инфо + кнопки ════════════════════════════ */}
       <div
         className={classNames(styles.panel, { [styles['panel--expanded']]: expanded })}
         onPointerDown={(e) => e.stopPropagation()}
       >
-        {/* Dot-индикаторы */}
         <div className={styles.dots}>
           {Array.from({ length: totalSlides }, (_, i) => (
             <button
@@ -199,7 +179,6 @@ const TrendItem = observer(({ item, isActive, isVisible, onBecameActive }: Trend
           ))}
         </div>
 
-        {/* Основное тело: текст слева, кнопки справа */}
         <div className={styles.body}>
           <div className={styles.textWrap} onClick={() => setExpanded(v => !v)}>
             <h2 className={styles.title}>{item.title}</h2>
@@ -215,7 +194,6 @@ const TrendItem = observer(({ item, isActive, isVisible, onBecameActive }: Trend
             )}
           </div>
 
-          {/* Кнопки: избранное + страница фильма */}
           <div className={styles.actions}>
             <button
               className={classNames(styles.btn, { [styles['btn--fav']]: isFav })}
@@ -250,7 +228,6 @@ const TrendItem = observer(({ item, isActive, isVisible, onBecameActive }: Trend
         </div>
       </div>
 
-      {/* ══ Модалка трейлера ════════════════════════════════════════════════ */}
       {trailerOpen && (
         <div ref={modalRef} className={styles.modal}>
           <button

@@ -3,7 +3,6 @@
 $reel-w: 400px;
 $reel-h: 711px;
 
-// ─── Фон-обёртка на весь экран ───────────────────────────────────────────────
 .feed {
   position: fixed;
   inset: 0;
@@ -12,8 +11,6 @@ $reel-h: 711px;
   z-index: 100;
 }
 
-// ─── Кнопка «Назад» ──────────────────────────────────────────────────────────
-// Позиционируется относительно .feed, поверх scroll-контейнера
 .backBtn {
   position: absolute;
   top: $spacing-xl;
@@ -49,7 +46,6 @@ $reel-h: 711px;
     flex-shrink: 0;
   }
 
-  // На мобиле: только иконка без текста, прижата к краю экрана
   @include mobile {
     top: $spacing-lg;
     left: $spacing-md;
@@ -61,7 +57,6 @@ $reel-h: 711px;
   }
 }
 
-// ─── Scroll-контейнер ────────────────────────────────────────────────────────
 .scroll {
   width: $reel-w;
   height: $reel-h;
@@ -71,7 +66,6 @@ $reel-h: 711px;
   scrollbar-width: none;
   -ms-overflow-style: none;
   border-radius: $radius-xl;
-  // Лёгкая тень вокруг плеера на тёмном фоне
   box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
   position: relative;
 
@@ -87,13 +81,11 @@ $reel-h: 711px;
   }
 }
 
-// ─── Sentinel для infinite scroll ────────────────────────────────────────────
 .sentinel {
   height: 1px;
   width: 100%;
 }
 
-// ─── Лоадер: три пульсирующие точки ─────────────────────────────────────────
 .loader {
   height: 72px;
   @include flex-center;
@@ -117,7 +109,6 @@ $reel-h: 711px;
   40%           { transform: scale(1);    opacity: 1;    }
 }
 
-// ─── Конец ленты ─────────────────────────────────────────────────────────────
 .end {
   height: 72px;
   @include flex-center;

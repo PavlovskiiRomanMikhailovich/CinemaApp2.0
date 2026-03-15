@@ -1,9 +1,5 @@
 @import './Roboto/fonts.css';
 
-// --- CSS custom properties (theme tokens) ---
-// Живут здесь, а не в variables.scss, потому что variables.scss используется через
-// @use в CSS Modules — Turbopack запрещает глобальные селекторы в таких файлах.
-
 :root {
   --base-background: #141414;
   --card-background: #1E1E1E;

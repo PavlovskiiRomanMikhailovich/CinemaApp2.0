@@ -5,7 +5,6 @@ $item-h: 711px;
 $panel-h: 140px;
 $panel-h-exp: 340px;
 
-// ─── Корневой контейнер слайда ────────────────────────────────────────────────
 .item {
   width: $item-w;
   height: $item-h;
@@ -22,7 +21,6 @@ $panel-h-exp: 340px;
   }
 }
 
-// ─── Заглушка (вне окна виртуализации) ───────────────────────────────────────
 .fallback {
   width: 100%;
   height: 100%;
@@ -31,7 +29,6 @@ $panel-h-exp: 340px;
   filter: brightness(0.4);
 }
 
-// ─── Горизонтальный трек (scroll-snap внутри) ────────────────────────────────
 .track {
   display: flex;
   width: 100%;
@@ -49,7 +46,6 @@ $panel-h-exp: 340px;
   &:active { cursor: grabbing; }
 }
 
-// ─── Один фото-слайд ─────────────────────────────────────────────────────────
 .slide {
   flex: 0 0 100%;
   width: 100%;
@@ -68,7 +64,6 @@ $panel-h-exp: 340px;
   pointer-events: none;
 }
 
-// ─── Трейлер-слайд ───────────────────────────────────────────────────────────
 .trailerSlide {
   @include flex-col-center;
   background: #000;
@@ -111,7 +106,7 @@ $panel-h-exp: 340px;
   }
 
   svg {
-    margin-left: 4px; // оптический сдвиг треугольника
+    margin-left: 4px;
   }
 }
 
@@ -123,7 +118,6 @@ $panel-h-exp: 340px;
   text-shadow: 0 1px 6px rgba(0,0,0,0.8);
 }
 
-// ─── Затемнение при раскрытом описании ───────────────────────────────────────
 .backdrop {
   position: absolute;
   inset: 0;
@@ -138,7 +132,6 @@ $panel-h-exp: 340px;
   to   { opacity: 1; }
 }
 
-// ─── Нижняя панель ───────────────────────────────────────────────────────────
 .panel {
   position: absolute;
   bottom: 0;
@@ -157,12 +150,10 @@ $panel-h-exp: 340px;
   gap: $spacing-sm;
   transition: background $transition-normal;
 
-  // При раскрытии — сплошной тёмный фон, фиксированная высота с прокруткой внутри
   &--expanded {
     background: rgba(10, 10, 10, 0.96);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    // Панель растёт снизу вверх, но не выходит за экран
     max-height: 75%;
     overflow-y: auto;
     scrollbar-width: none;
@@ -170,7 +161,6 @@ $panel-h-exp: 340px;
   }
 }
 
-// ─── Dot-индикаторы ───────────────────────────────────────────────────────────
 .dots {
   display: flex;
   align-items: center;
@@ -197,14 +187,12 @@ $panel-h-exp: 340px;
   }
 }
 
-// ─── Тело панели: текст + кнопки ─────────────────────────────────────────────
 .body {
   display: flex;
   align-items: flex-end;
   gap: $spacing-md;
 }
 
-// ─── Текстовая область ───────────────────────────────────────────────────────
 .textWrap {
   flex: 1;
   cursor: pointer;
@@ -226,7 +214,6 @@ $panel-h-exp: 340px;
   font-size: 13px;
   line-height: 1.55;
   margin: 0 0 $spacing-xs;
-  // Свёрнуто: 2 строки через webkit-box
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -234,7 +221,6 @@ $panel-h-exp: 340px;
   overflow: hidden;
 
   &--expanded {
-    // Выходим из webkit-box режима → обычный блок со скроллом
     display: block;
     -webkit-line-clamp: unset;
     line-clamp: unset;
@@ -263,7 +249,6 @@ $panel-h-exp: 340px;
   }
 }
 
-// ─── Кнопки действий ─────────────────────────────────────────────────────────
 .actions {
   display: flex;
   flex-direction: column;
@@ -307,7 +292,6 @@ $panel-h-exp: 340px;
   }
 }
 
-// ─── Модалка трейлера — position:fixed чтобы выйти из overflow:hidden ────────
 .modal {
   position: fixed;
   inset: 0;
@@ -342,7 +326,6 @@ $panel-h-exp: 340px;
   }
 }
 
-// Обычный height: 100% — никаких хаков, VK-панель управления видна и кликабельна
 .modalIframe {
   width: 100%;
   height: 100%;

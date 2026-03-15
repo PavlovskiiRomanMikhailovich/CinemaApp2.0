@@ -37,7 +37,6 @@ export async function GET(req: NextRequest) {
           film.poster?.formats?.large?.url ?? film.poster?.url ?? '',
         );
 
-        // Галерея: предпочитаем large/medium формат, fallback на оригинал
         const gallery: string[] = ((film.gallery as any[]) ?? [])
           .map((img: any) =>
             toAbsUrl(
