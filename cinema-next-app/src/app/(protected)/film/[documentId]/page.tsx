@@ -57,7 +57,39 @@ const FilmPage = () => {
     router.back();
   };
 
-  if (loading) return <div className={styles.loading}>Загрузка фильма...</div>;
+  if (loading) return (
+    <div className={styles['skeleton-page']}>
+      <div className={styles['skeleton-back']} />
+
+      <div className={styles['skeleton-content']}>
+        <div className={styles['skeleton-video']} />
+
+        <div className={styles['skeleton-info']}>
+          <div className={`${styles['skeleton-line']} ${styles['skeleton-line--title']}`} />
+          <div className={`${styles['skeleton-line']} ${styles['skeleton-line--meta']}`} />
+          <div className={styles['skeleton-desc']}>
+            <div className={`${styles['skeleton-line']} ${styles['skeleton-line--desc-1']}`} />
+            <div className={`${styles['skeleton-line']} ${styles['skeleton-line--desc-2']}`} />
+            <div className={`${styles['skeleton-line']} ${styles['skeleton-line--desc-3']}`} />
+            <div className={`${styles['skeleton-line']} ${styles['skeleton-line--desc-4']}`} />
+          </div>
+        </div>
+      </div>
+
+      <div className={styles['skeleton-recs']}>
+        <div className={styles['skeleton-recs-title']} />
+        <div className={styles['skeleton-recs-track']}>
+          {Array.from({ length: 4 }, (_, i) => (
+            <div key={i} className={styles['skeleton-card']} style={{ '--i': i } as React.CSSProperties}>
+              <div className={styles['skeleton-card-image']} />
+              <div className={`${styles['skeleton-card-line']}`} />
+              <div className={`${styles['skeleton-card-line']} ${styles['skeleton-card-line--short']}`} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
   if (error) throw error;
   if (!film) throw new Error('Фильм не найден');
 
@@ -79,7 +111,7 @@ const FilmPage = () => {
         onClick={handleGoBack}
         className={styles['back-button']}
       >
-        <img src="/images/arrow-left.svg" alt="Назад" />
+        <img src="/images/arrow-left.svg" alt="Назад"/>
         <div>Назад</div>
       </Button>
 

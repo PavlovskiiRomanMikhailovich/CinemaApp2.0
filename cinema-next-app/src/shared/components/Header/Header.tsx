@@ -15,9 +15,11 @@ const Header = () => {
 
   return (
     <header className={styles.header}>
-      <div className={styles['header__logo']}>
-        <img src="/images/logo.png" alt="Logo" />
-      </div>
+      <Link href="/movies">
+        <div className={styles['header__logo']}>
+          <img src="/images/logo.png" alt="Logo" />
+        </div>
+      </Link>
       <nav className={styles['header__nav']}>
         <Link
           href="/movies"
@@ -48,9 +50,6 @@ const Header = () => {
         </Link>
       </nav>
       <div className={styles['icons-container']}>
-        <Link href="/favorites">
-          <img src="/images/Bookmark.svg" alt="Избранное" />
-        </Link>
         <UserMenu />
       </div>
     </header>

@@ -93,7 +93,6 @@
   @include mobile {
     display: flex;
 
-    // Bookmark icon hidden on mobile — Избранное is in the nav
     > a {
       display: none;
     }
@@ -107,4 +106,8 @@
       opacity: 0.7;
     }
   }
+}
+
+.header__logo {
+  cursor: pointer;
 }
