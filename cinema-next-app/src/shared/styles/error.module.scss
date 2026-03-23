@@ -1,0 +1,83 @@
+@use 'styles/variables' as *;
+
+.container {
+  min-height: 100vh;
+  background-color: var(--base-background);
+  @include flex-col-center;
+  padding: $spacing-3xl;
+}
+
+.content {
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+  @include flex-col-center;
+  gap: $spacing-2xl;
+}
+
+.title {
+  font-size: clamp(120px, 20vw, 200px);
+  font-weight: bold;
+  color: var(--brand);
+  margin: 0;
+  line-height: 1;
+  text-shadow: var(--shadow-lg);
+  
+  @include tablet {
+    font-size: clamp(100px, 15vw, 150px);
+  }
+  
+  @include mobile {
+    font-size: clamp(80px, 12vw, 120px);
+  }
+}
+
+.subtitle {
+  font-size: clamp(24px, 5vw, 32px);
+  color: var(--text-primary);
+  margin: 0;
+  
+  @include mobile {
+    font-size: clamp(20px, 4vw, 24px);
+  }
+}
+
+.text {
+  font-size: clamp(14px, 3vw, 16px);
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 400px;
+  line-height: 1.6;
+  
+  @include mobile {
+    font-size: 14px;
+    padding: 0 $spacing-lg;
+  }
+}
+
+.actions {
+  @include flex-col-center;
+  gap: $spacing-lg;
+  margin-top: $spacing-lg;
+  width: 100%;
+}
+
+.link {
+  color: var(--brand);
+  text-decoration: underline;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color $transition-fast;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: $spacing-xs $spacing-sm;
+  
+  &:hover {
+    color: var(--text-primary);
+  }
+  
+  &:active {
+    opacity: 0.8;
+  }
+}

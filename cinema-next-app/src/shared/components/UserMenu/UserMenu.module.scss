@@ -1,0 +1,97 @@
+@use 'styles/variables' as *;
+
+.wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--card-border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    border-color $transition-fast,
+    color $transition-fast,
+    background $transition-fast;
+
+  &:hover,
+  &--open {
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
+  }
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 300;
+  background: var(--card-background);
+  border: 1px solid var(--card-border);
+  border-radius: $radius-lg;
+  box-shadow: $shadow-lg;
+  min-width: 180px;
+  padding: $spacing-xs 0;
+  animation: menuIn $transition-fast forwards;
+}
+
+@keyframes menuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.themeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-sm $spacing-md;
+  gap: $spacing-md;
+}
+
+.themeLabel {
+  color: var(--text-secondary);
+  font-size: 13px;
+  flex: 1;
+}
+
+.divider {
+  display: block;
+  height: 1px;
+  background: var(--card-border);
+  margin: $spacing-xs 0;
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: $spacing-sm $spacing-md;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    color $transition-fast,
+    background $transition-fast;
+
+  &:hover {
+    color: var(--brand);
+    background: rgba(229, 9, 20, 0.06);
+  }
+}

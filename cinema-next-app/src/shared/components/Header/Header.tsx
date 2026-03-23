@@ -2,25 +2,27 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import Image from 'next/image';
 import styles from './Header.module.scss';
 import classNames from 'classnames';
+import UserMenu from 'components/UserMenu/UserMenu';
 
 const Header = () => {
   const pathname = usePathname();
-  
+
   const isActive = (path: string) => {
     return pathname === path;
   };
 
   return (
     <header className={styles.header}>
-      <div className={styles['header__logo']}>
-        <img src="/images/logo.png" alt="Logo" />
-      </div>
+      <Link href="/movies">
+        <div className={styles['header__logo']}>
+          <img src="/images/logo.png" alt="Logo" />
+        </div>
+      </Link>
       <nav className={styles['header__nav']}>
-        <Link 
-          href="/movies" 
+        <Link
+          href="/movies"
           className={classNames(
             styles['header__link'],
             { [styles['active']]: isActive('/movies') }
@@ -28,30 +30,27 @@ const Header = () => {
         >
           Фильмы
         </Link>
-        <Link 
-          href="/new_films" 
+        <Link
+          href="/favorites"
           className={classNames(
             styles['header__link'],
-            { [styles['active']]: isActive('/new_films') }
+            { [styles['active']]: isActive('/favorites') }
           )}
         >
-          Новинки
+          Избранное
         </Link>
-        <Link 
-          href="/recomendations" 
+        <Link
+          href="/trends"
           className={classNames(
             styles['header__link'],
-            { [styles['active']]: isActive('/recomendations') }
+            { [styles['active']]: isActive('/trends') }
           )}
         >
-          Подборки
+          Тренды
         </Link>
       </nav>
       <div className={styles['icons-container']}>
-        <Link href="/favorites">
-          <img src="/images/Bookmark.svg" alt="Избранное" />
-        </Link>
-        <img src="/images/user.svg" alt="Пользователь" />
+        <UserMenu />
       </div>
     </header>
   );

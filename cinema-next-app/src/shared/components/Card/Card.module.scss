@@ -36,6 +36,11 @@
   flex-direction: column;
   gap: $spacing-sm;
   margin: $spacing-2xl $spacing-md $spacing-xl;
+
+  @include mobile {
+    margin: $spacing-sm $spacing-sm $spacing-xs;
+    gap: $spacing-xs;
+  }
 }
 
 .card__footer {
@@ -43,12 +48,21 @@
   gap: $spacing-sm;
   margin: 0 $spacing-md $spacing-2xl;
   min-height: 52px;
+
+  @include mobile {
+    margin: $spacing-xs $spacing-sm $spacing-sm;
+    min-height: unset;
+  }
 }
 
 .card__content {
   font-weight: 700;
   font-size: 18px;
   line-height: 122%;
+
+  @include mobile {
+    font-size: 13px;
+  }
 }
 
 .card__subtitle {

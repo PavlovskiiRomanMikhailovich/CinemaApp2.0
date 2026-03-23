@@ -11,6 +11,24 @@ const apiClient = axios.create({
   paramsSerializer: params => qs.stringify(params, { encode: false }),
 });
 
+const cache = new Map();
+const CACHE_DURATION = 5 * 60 * 1000;
+
+function getCached(key: string) {
+  const cached = cache.get(key);
+  if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+    return cached.data;
+  }
+  return null;
+}
+
+function setCached(key: string, data: any) {
+  cache.set(key, {
+    data,
+    timestamp: Date.now(),
+  });
+}
+
 export interface Category {
   id: number;
   documentId: string;
@@ -31,6 +49,7 @@ export interface Image {
   formats?: {
     small?: ImageFormat;
     thumbnail?: ImageFormat;
+    large?: ImageFormat;
   };
 }
 
@@ -70,13 +89,27 @@ export interface FilmsQueryParams {
   categoryIds?: number[];
   page?: number;
   pageSize?: number;
+  releaseYear?: number;
+  ratingMin?: number;
+  ratingMax?: number;
+  durationMin?: number;
+  durationMax?: number;
+  ageLimits?: number[];
 }
 
 export const getFilmById = async (documentId: string): Promise<FilmResponse> => {
+  const cacheKey = `film-${documentId}`;
+  const cached = getCached(cacheKey);
+  
+  if (cached) {
+    return cached;
+  }
+  
   try {
     const response = await apiClient.get(`/films/${documentId}`, { 
       params: POPULATE_CONFIG 
     });
+    setCached(cacheKey, response.data);
     return response.data;
   } catch (error) {
     console.error(`Error fetching film ${documentId}:`, error);
@@ -106,11 +139,29 @@ export const getFilms = async (params: FilmsQueryParams = {}): Promise<FilmsResp
     }
 
     if (params.categoryIds && params.categoryIds.length > 0) {
-      filters.category = {
-        id: {
-          $in: params.categoryIds
-        }
-      };
+      filters.category = { id: { $in: params.categoryIds } };
+    }
+
+    if (params.releaseYear) {
+      filters.releaseYear = { $eq: params.releaseYear };
+    }
+
+    if (params.ratingMin !== undefined || params.ratingMax !== undefined) {
+      filters.rating = {};
+      if (params.ratingMin !== undefined) filters.rating.$gte = params.ratingMin;
+      if (params.ratingMax !== undefined) filters.rating.$lte = params.ratingMax;
+    }
+
+    if (params.durationMin !== undefined || params.durationMax !== undefined) {
+      filters.duration = {};
+      if (params.durationMin !== undefined) filters.duration.$gte = params.durationMin;
+      if (params.durationMax !== undefined && params.durationMax < 999) {
+        filters.duration.$lte = params.durationMax;
+      }
+    }
+
+    if (params.ageLimits && params.ageLimits.length > 0) {
+      filters.ageLimit = { $in: params.ageLimits };
     }
 
     if (Object.keys(filters).length > 0) {
@@ -126,8 +177,16 @@ export const getFilms = async (params: FilmsQueryParams = {}): Promise<FilmsResp
 };
 
 export const getCategories = async (): Promise<StrapiResponse<Category[]>> => {
+  const cacheKey = 'categories';
+  const cached = getCached(cacheKey);
+  
+  if (cached) {
+    return cached;
+  }
+  
   try {
     const response = await apiClient.get('/film-categories');
+    setCached(cacheKey, response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching categories:', error);
